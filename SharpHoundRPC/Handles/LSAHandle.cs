@@ -1,33 +1,33 @@
 ﻿using System;
 using System.Security;
 using Microsoft.Win32.SafeHandles;
+using SharpHoundRPC.LSANative;
 using SharpHoundRPC.SAMRPCNative;
 
 namespace SharpHoundRPC.Handles
 {
-    public class SAMHandle : SafeHandleZeroOrMinusOneIsInvalid
+    public class LSAHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
-        public SAMHandle() : base(true)
+        public LSAHandle() : base(true)
         {
         }
-
-        public SAMHandle(IntPtr handle) : base(true)
-        {
-            SetHandle(handle);
-        }
-
-        public SAMHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
+        
+        public LSAHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
         {
             SetHandle(handle);
         }
 
+        public LSAHandle(bool ownsHandle) : base(true)
+        {
+        }
+        
         protected override bool ReleaseHandle()
         {
             if (handle == IntPtr.Zero) return true;
-            return SAMMethods.SamCloseHandle(handle) == NtStatus.StatusSuccess;
+            return LSAMethods.LsaClose(handle) == NtStatus.StatusSuccess;
         }
-
-        ~SAMHandle()
+        
+        ~LSAHandle()
         {
             Dispose();
         }

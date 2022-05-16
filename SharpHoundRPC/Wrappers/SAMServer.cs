@@ -26,9 +26,9 @@ namespace SharpHoundRPC.Wrappers
             return new SAMServer(computerName, handle);
         }
 
-        public IEnumerable<SAMStructs.SamRidEnumeration> GetDomains()
+        public IEnumerable<(string Name, int Rid)> GetDomains()
         {
-            return SAMMethods.SamEnumerateDomainsInSamServer(Handle);
+            return SAMMethods.SamEnumerateDomainsInSamServer(Handle).Select(result => (result.Name.ToString(), result.Rid));
         }
 
         public SecurityIdentifier LookupDomain(string name)

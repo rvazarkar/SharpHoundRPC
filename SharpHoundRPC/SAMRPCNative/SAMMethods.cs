@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Principal;
 using SharpHoundRPC.Handles;
+using SharpHoundRPC.Shared;
 using SharpHoundRPC.Wrappers;
 
 namespace SharpHoundRPC.SAMRPCNative
 {
+    [SuppressUnmanagedCodeSecurity]
     public static class SAMMethods
     {
         internal static SAMHandle SamConnect(string serverName, SAMEnums.SamAccessMasks requestedConnectAccess)
         {
-            var us = new SAMStructs.SAMUnicodeString(serverName);
-            var objectAttributes = default(SAMStructs.SAMObjectAttributes);
+            var us = new SharedStructs.UnicodeString(serverName);
+            var objectAttributes = default(SAMStructs.ObjectAttributes);
 
             var status = SamConnect(ref us, out var handle, requestedConnectAccess, ref objectAttributes);
 
@@ -25,10 +28,10 @@ namespace SharpHoundRPC.SAMRPCNative
 
         [DllImport("samlib.dll", CharSet = CharSet.Unicode)]
         private static extern NtStatus SamConnect(
-            ref SAMStructs.SAMUnicodeString serverName,
+            ref SharedStructs.UnicodeString serverName,
             out SAMHandle serverHandle,
             SAMEnums.SamAccessMasks desiredAccess,
-            ref SAMStructs.SAMObjectAttributes objectAttributes
+            ref SAMStructs.ObjectAttributes objectAttributes
         );
 
         internal static IEnumerable<SAMStructs.SamRidEnumeration> SamEnumerateDomainsInSamServer(SAMHandle serverHandle)
@@ -54,7 +57,7 @@ namespace SharpHoundRPC.SAMRPCNative
 
         internal static SecurityIdentifier SamLookupDomainInSamServer(SAMHandle serverHandle, string name)
         {
-            var us = new SAMStructs.SAMUnicodeString(name);
+            var us = new SharedStructs.UnicodeString(name);
             var status = SamLookupDomainInSamServer(serverHandle, ref us, out var sid);
 
             if (status == NtStatus.StatusNoSuchDomain)
@@ -67,7 +70,7 @@ namespace SharpHoundRPC.SAMRPCNative
         [DllImport("samlib.dll", CharSet = CharSet.Unicode)]
         private static extern NtStatus SamLookupDomainInSamServer(
             SAMHandle serverHandle,
-            ref SAMStructs.SAMUnicodeString name,
+            ref SharedStructs.UnicodeString name,
             out SAMPointer sid);
 
         internal static SAMDomain SamOpenDomain(SAMHandle serverHandle, SecurityIdentifier securityIdentifier,
@@ -130,7 +133,7 @@ namespace SharpHoundRPC.SAMRPCNative
             out SAMHandle aliasHandle
         );
 
-        internal static SAMStructs.SamRidEnumeration[] SamEnumerateAliasesInDomain(SAMHandle domainHandle)
+        internal static IEnumerable<SAMStructs.SamRidEnumeration> SamEnumerateAliasesInDomain(SAMHandle domainHandle)
         {
             var enumerationContext = 0;
             var status =
@@ -139,7 +142,7 @@ namespace SharpHoundRPC.SAMRPCNative
 
             status.CheckError(RPCException.EnumerateAliases);
 
-            return ridPointer.GetEnumerable<SAMStructs.SamRidEnumeration>(count).ToArray();
+            return ridPointer.GetEnumerable<SAMStructs.SamRidEnumeration>(count);
         }
 
         [DllImport("samlib.dll", CharSet = CharSet.Unicode)]
@@ -158,7 +161,7 @@ namespace SharpHoundRPC.SAMRPCNative
 
             status.CheckError(RPCException.LookupIds);
 
-            return (namePointer.GetData<SAMStructs.SAMUnicodeString>().ToString(),
+            return (namePointer.GetData<SharedStructs.UnicodeString>().ToString(),
                 (SAMEnums.SidNameUse) usePointer.GetData<int>());
         }
 
@@ -170,7 +173,7 @@ namespace SharpHoundRPC.SAMRPCNative
 
             status.CheckError(RPCException.LookupIds);
 
-            names = namePointer.GetEnumerable<SAMStructs.SAMUnicodeString>(count).Select(x => x.ToString()).ToArray();
+            names = namePointer.GetEnumerable<SharedStructs.UnicodeString>(count).Select(x => x.ToString()).ToArray();
             types = new SAMEnums.SidNameUse[count];
 
             Marshal.Copy(usePointer.DangerousGetHandle(), (int[]) (object) types, 0, count);
