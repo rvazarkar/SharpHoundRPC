@@ -43,7 +43,7 @@ namespace SharpHoundRPC.Wrappers
             return (result.Name, result.Use, result.Domain);
         }
         
-        public IEnumerable<(SecurityIdentifier sids, string Name, SharedEnums.SidNameUse Use, string Domains)> LookupSids(SecurityIdentifier[] sids)
+        public IEnumerable<(SecurityIdentifier Sid, string Name, SharedEnums.SidNameUse Use, string Domain)> LookupSids(SecurityIdentifier[] sids)
         {
             return LSAMethods.LsaLookupSids(Handle, sids);
         }

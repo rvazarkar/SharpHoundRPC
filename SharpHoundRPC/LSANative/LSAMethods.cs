@@ -98,7 +98,8 @@ namespace SharpHoundRPC.LSANative
 
                 var translatedNames = names.GetEnumerable<LSAStructs.LSATranslatedNames>(count).ToArray();
                 var domainList = referencedDomains.GetData<LSAStructs.LSAReferencedDomains>();
-                var domains = domainList.Domains.GetEnumerable<LSAStructs.LSATrustInformation>((int)domainList.Entries).ToArray();
+                var safeDomains = new LSAPointer(domainList.Domains);
+                var domains = safeDomains.GetEnumerable<LSAStructs.LSATrustInformation>(domainList.Entries).ToArray();
                 for (var i = 0; i < count; i++)
                 {
                     yield return (sids[i], translatedNames[i].Name.ToString(), translatedNames[i].Use,

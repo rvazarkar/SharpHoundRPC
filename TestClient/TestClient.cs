@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using SharpHoundRPC;
 using SharpHoundRPC.LSANative;
 using SharpHoundRPC.Wrappers;
 
 namespace TestClient
 {
-    internal class Program
+    internal static class TestClient
     {
         public static void Main(string[] args)
         {
@@ -32,9 +33,10 @@ namespace TestClient
                     {
                         Console.WriteLine("----------------------------------------------------");
                         Console.WriteLine($"Querying privilege {privilege}");
-                        foreach (var user in lsaServer.GetPrincipalsWithPrivilege(privilege))
+                        var users = lsaServer.GetPrincipalsWithPrivilege(privilege).ToArray();
+                        foreach (var user in lsaServer.LookupSids(users))
                         {
-                            Console.WriteLine($"Found grant for {user.Value}");
+                            Console.WriteLine($"Found grant for User {user.Domain}\\{user.Name} ({user.Sid} - {user.Use})");
                         }
                     }
                 }

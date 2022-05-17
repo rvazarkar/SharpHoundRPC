@@ -45,15 +45,15 @@ namespace SharpHoundRPC.LSANative
         [StructLayout(LayoutKind.Sequential)]
         public struct LSAReferencedDomains
         {
-            public long Entries;
-            public LSAPointer Domains;
+            public int Entries;
+            public IntPtr Domains;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct LSATrustInformation
         {
             public SharedStructs.UnicodeString Name;
-            public LSAPointer Sid;
+            public IntPtr Sid;
         }
     }
 }
