@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using Microsoft.Win32.SafeHandles;
 using SharpHoundRPC.SAMRPCNative;
 
 namespace SharpHoundRPC.Handles

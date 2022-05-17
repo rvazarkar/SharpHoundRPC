@@ -17,7 +17,7 @@ namespace SharpHoundRPC.Wrappers
             return SAMMethods.SamLookupIdsInDomain(Handle, rid);
         }
 
-        public IEnumerable<SAMStructs.SamRidEnumeration> GetAliases()
+        public IEnumerable<(string Name, int Rid)> GetAliases()
         {
             return SAMMethods.SamEnumerateAliasesInDomain(Handle);
         }

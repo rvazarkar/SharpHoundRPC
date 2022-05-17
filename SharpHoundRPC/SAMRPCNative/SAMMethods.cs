@@ -133,7 +133,7 @@ namespace SharpHoundRPC.SAMRPCNative
             out SAMHandle aliasHandle
         );
 
-        internal static IEnumerable<SAMStructs.SamRidEnumeration> SamEnumerateAliasesInDomain(SAMHandle domainHandle)
+        internal static IEnumerable<(string Name, int Rid)> SamEnumerateAliasesInDomain(SAMHandle domainHandle)
         {
             var enumerationContext = 0;
             var status =
@@ -142,7 +142,10 @@ namespace SharpHoundRPC.SAMRPCNative
 
             status.CheckError(RPCException.EnumerateAliases);
 
-            return ridPointer.GetEnumerable<SAMStructs.SamRidEnumeration>(count);
+            foreach (var ridEnum in ridPointer.GetEnumerable<SAMStructs.SamRidEnumeration>(count))
+            {
+                yield return (ridEnum.Name.ToString(), ridEnum.Rid);
+            }
         }
 
         [DllImport("samlib.dll", CharSet = CharSet.Unicode)]

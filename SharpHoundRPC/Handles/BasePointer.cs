@@ -32,6 +32,8 @@ namespace SharpHoundRPC.Handles
                     yield return (T) (object) ReadInt32(i);
                 else if (typeof(T) == typeof(long))
                     yield return (T) (object) ReadInt64(i);
+                else if (typeof(T) == typeof(SecurityIdentifier))
+                    yield return (T) (object) new SecurityIdentifier(ReadIntPtr(i));
                 else
                     yield return Marshal.PtrToStructure<T>(handle + Marshal.SizeOf<T>() * i);
         }
@@ -55,6 +57,11 @@ namespace SharpHoundRPC.Handles
         private long ReadInt64(int offset = 0)
         {
             return Marshal.ReadInt64(handle + offset * Marshal.SizeOf<long>());
+        }
+
+        private IntPtr ReadIntPtr(int offset = 0)
+        {
+            return Marshal.ReadIntPtr(handle + offset * Marshal.SizeOf<IntPtr>());
         }
     }
 }

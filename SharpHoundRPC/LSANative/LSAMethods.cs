@@ -58,25 +58,22 @@ namespace SharpHoundRPC.LSANative
         internal static IEnumerable<SecurityIdentifier> LsaEnumerateAccountsWithUserRight(LSAHandle policyHandle,
             string userRight)
         {
-            var us = new SharedStructs.UnicodeString(userRight);
-            var status = LsaEnumerateAccountsWithUserRight(policyHandle, us, out var sids, out var count);
+            var arr = new SharedStructs.UnicodeString[1];
+            arr[0] = new SharedStructs.UnicodeString(userRight);
+
+            var status = LsaEnumerateAccountsWithUserRight(policyHandle, arr, out var sids, out var count);
             status.CheckError("LsaEnumerateAccountsWithUserRight");
 
-            for (var i = 0; i < count; i++)
-            {
-                var ptr = Marshal.ReadIntPtr(sids, i * Marshal.SizeOf<IntPtr>());
-                yield return new SecurityIdentifier(ptr);
-            }
+            return sids.GetEnumerable<SecurityIdentifier>(count);
         }
         
         [DllImport("advapi32", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern NtStatus LsaEnumerateAccountsWithUserRight(
             LSAHandle policyHandle,
-            SharedStructs.UnicodeString userRight,
+            SharedStructs.UnicodeString[] userRight,
             out LSAPointer sids,
             out int count
         );
-
 
         internal static IEnumerable<(SecurityIdentifier SID, string Name, SharedEnums.SidNameUse Use, string Domain)> LsaLookupSids(LSAHandle policyHandle,
             SecurityIdentifier[] sids)

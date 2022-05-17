@@ -11,6 +11,7 @@
         StatusObjectTypeMismatch = unchecked((int) 0xC0000024),
         StatusNoSuchDomain = unchecked((int) 0xC00000DF),
         StatusRpcServerUnavailable = unchecked((int) 0xC0020017),
-        StatusNoSuchAlias = unchecked((int) 0xC0000151)
+        StatusNoSuchAlias = unchecked((int) 0xC0000151),
+        StatusNoMoreEntries = unchecked((int) 0x8000001A)
     }
 }

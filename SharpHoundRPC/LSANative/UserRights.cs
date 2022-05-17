@@ -46,5 +46,16 @@
         public const string TimeZone = "SeTimeZonePrivilege";
         public const string TrustedCredManAccess = "SeTrustedCredManAccessPrivilege";
         public const string Undock = "SeUndockPrivilege";
+
+        public static readonly string[] AllPrivileges = new[]
+        {
+            AssignPrimaryToken, Audit, Backup, BatchLogon, ChangeNotify, CreateGlobal, CreatePagefile, CreatePermanent,
+            CreateSymbolicLink, CreateToken, Debug, DenyBatchLogon, DenyInteractiveLogon, DenyNetworkLogon,
+            DenyRemoteInteractiveLogon, DenyServiceLogon, EnableDelegation, Impersonate, IncreaseBasePriority,
+            IncreaseQuota, IncreaseWorkingSet, InteractiveLogon, LoadDriver, LockMemory, MachineAccount, ManageVolume,
+            NetworkLogon, ProfileSingleProcess, Relabel, RemoteInteractiveLogon, RemoteShutdown, Restore, Security,
+            ServiceLogon, Shutdown, SyncAgent, SystemEnvironment, SystemProfile, SystemTime, TakeOwnership, Tcb,
+            TimeZone, TrustedCredManAccess, Undock
+        };
     }
 }
