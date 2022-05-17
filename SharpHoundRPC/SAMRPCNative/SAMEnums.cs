@@ -42,21 +42,6 @@ namespace SharpHoundRPC.SAMRPCNative
             SamServerExecute = 0x20021
         }
 
-        public enum SidNameUse
-        {
-            User = 1,
-            Group,
-            Domain,
-            Alias,
-            WellKnownGroup,
-            DeletedAccount,
-            Invalid,
-            Unknown,
-            Computer,
-            Label,
-            LogonSession
-        }
-
         [Flags]
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
         internal enum AliasOpenFlags

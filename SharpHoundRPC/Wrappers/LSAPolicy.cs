@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Security.Principal;
 using SharpHoundRPC.Handles;
 using SharpHoundRPC.LSANative;
+using SharpHoundRPC.Shared;
 
 namespace SharpHoundRPC.Wrappers
 {
@@ -34,6 +35,17 @@ namespace SharpHoundRPC.Wrappers
         public IEnumerable<SecurityIdentifier> GetPrincipalsWithPrivilege(string userRight)
         {
             return LSAMethods.LsaEnumerateAccountsWithUserRight(Handle, userRight);
+        }
+
+        public (string Name, SharedEnums.SidNameUse Use, string Domains) LookupSid(SecurityIdentifier sid)
+        {
+            var result = LSAMethods.LsaLookupSids(Handle, new[] {sid}).First();
+            return (result.Name, result.Use, result.Domain);
+        }
+        
+        public IEnumerable<(SecurityIdentifier sids, string Name, SharedEnums.SidNameUse Use, string Domains)> LookupSids(SecurityIdentifier[] sids)
+        {
+            return LSAMethods.LsaLookupSids(Handle, sids);
         }
     }
 }

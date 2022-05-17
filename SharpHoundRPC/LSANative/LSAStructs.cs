@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using SharpHoundRPC.Handles;
+using SharpHoundRPC.SAMRPCNative;
 using SharpHoundRPC.Shared;
 
 namespace SharpHoundRPC.LSANative
@@ -30,6 +32,28 @@ namespace SharpHoundRPC.LSANative
         {
             public SharedStructs.UnicodeString DomainName;
             public IntPtr DomainSid;
+        }
+        
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LSATranslatedNames
+        {
+            public SharedEnums.SidNameUse Use;
+            public SharedStructs.UnicodeString Name;
+            public int DomainIndex;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LSAReferencedDomains
+        {
+            public long Entries;
+            public LSAPointer Domains;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LSATrustInformation
+        {
+            public SharedStructs.UnicodeString Name;
+            public LSAPointer Sid;
         }
     }
 }

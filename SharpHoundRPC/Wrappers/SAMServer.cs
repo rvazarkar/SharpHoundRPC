@@ -57,7 +57,7 @@ namespace SharpHoundRPC.Wrappers
 
 
             var domain = GetDomains().FirstOrDefault();
-            sid = LookupDomain(domain.Name.ToString());
+            sid = LookupDomain(domain.Name);
             _cachedMachineSid = sid;
             return sid;
         }

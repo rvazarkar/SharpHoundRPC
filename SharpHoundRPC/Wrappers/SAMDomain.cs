@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SharpHoundRPC.Handles;
 using SharpHoundRPC.SAMRPCNative;
+using SharpHoundRPC.Shared;
 
 namespace SharpHoundRPC.Wrappers
 {
@@ -11,7 +12,7 @@ namespace SharpHoundRPC.Wrappers
         {
         }
 
-        public (string Name, SAMEnums.SidNameUse Type) LookupUserByRid(int rid)
+        public (string Name, SharedEnums.SidNameUse Type) LookupUserByRid(int rid)
         {
             return SAMMethods.SamLookupIdsInDomain(Handle, rid);
         }
